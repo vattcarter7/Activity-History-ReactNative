@@ -1,22 +1,19 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import {SafeAreaView, View, Text} from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import HomeView from './src/components/Home/HomeView';
 
-const App: () => React$Node = () => {
+const App = () => {
   return (
-    <SafeAreaView>
-      <View style={{height: 200, width: 200, backgroundColor: 'red'}}>
-        <Text>Hello</Text>
-      </View>
+    <SafeAreaView style={styles.appContainer}>
+      <HomeView />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+  },
+});
 
 export default App;
