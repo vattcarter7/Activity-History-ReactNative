@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import moment from 'moment';
+
 import i18n from '../../i18n/i18n';
 
 class HomeView extends Component {
@@ -16,13 +18,15 @@ class HomeView extends Component {
         style={styles.mainActionButton}
         onPress={() => {
           setInterval(() => {
-            const { time } = this.state;
-            this.setState({
-              time: time + 1000,
-            });
+            const { time, paused } = this.state;
+            if (!paused) {
+              this.setState({
+                time: time + 1000,
+              });
+            }
           }, 1000);
         }}>
-        <Text style={styles.mainActionButtonText}>{i18n.START}</Text>
+        <Text style={styles.mainActionButtonText}>{i18n.HOME.START}</Text>
       </TouchableOpacity>
     );
   }
@@ -32,9 +36,22 @@ class HomeView extends Component {
     return (
       <TouchableOpacity
         style={styles.mainActionButton}
-        onPress={() => console.log('Button Pressed')}>
+        onPress={() => {
+          console.log('Button Pressed');
+          const { paused } = this.state;
+          this.setState({
+            paused: !paused,
+          });
+        }}>
         <Text style={styles.mainActionButtonText}>
-          <Text>{time}</Text>
+          <Text>{moment.utc(time).format('HH:mm:ss')}</Text>
+        </Text>
+        <Text
+          style={[
+            styles.mainActionButtonText,
+            styles.mainActionButtonPausedText,
+          ]}>
+          <Text>{i18n.HOME.PAUSE}</Text>
         </Text>
       </TouchableOpacity>
     );
@@ -45,7 +62,7 @@ class HomeView extends Component {
     return (
       <View style={styles.homeViewContainer}>
         <View style={styles.welcomeHeaderContainer}>
-          <Text style={styles.welcomeHeader}>{i18n.WELCOME_HEADER}</Text>
+          <Text style={styles.welcomeHeader}>{i18n.HOME.WELCOME_HEADER}</Text>
         </View>
         <View style={styles.mainActionButtonContainer}>
           {time > 0 ? this.renderRunningTimer() : this.renderStartButton()}
@@ -85,6 +102,9 @@ const styles = StyleSheet.create({
     fontSize: 60,
     color: '#FFF',
     fontWeight: 'bold',
+  },
+  mainActionButtonPausedText: {
+    fontSize: 24,
   },
 });
 

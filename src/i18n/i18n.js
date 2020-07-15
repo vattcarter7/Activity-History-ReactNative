@@ -1,6 +1,9 @@
 const i18n = {
-  WELCOME_HEADER: 'Hello My Friend',
-  START: 'START',
+  HOME: {
+    WELCOME_HEADER: 'Hello My Friend',
+    START: 'START',
+    PAUSE: 'PAUSE',
+  },
 };
 
 export default i18n;
