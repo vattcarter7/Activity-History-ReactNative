@@ -1,23 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import i18n from '../../i18n/i18n';
 
-const HomeView = () => {
-  return (
-    <View style={styles.homeViewContainer}>
-      <View style={styles.welcomeHeaderContainer}>
-        <Text style={styles.welcomeHeader}>{i18n.WELCOME_HEADER}</Text>
+class HomeView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      time: 0,
+    };
+  }
+
+  renderStartButton() {
+    return (
+      <TouchableOpacity
+        style={styles.mainActionButton}
+        onPress={() => {
+          setInterval(() => {
+            const { time } = this.state;
+            this.setState({
+              time: time + 1000,
+            });
+          }, 1000);
+        }}>
+        <Text style={styles.mainActionButtonText}>{i18n.START}</Text>
+      </TouchableOpacity>
+    );
+  }
+
+  renderRunningTimer() {
+    const { time } = this.state;
+    return (
+      <TouchableOpacity
+        style={styles.mainActionButton}
+        onPress={() => console.log('Button Pressed')}>
+        <Text style={styles.mainActionButtonText}>
+          <Text>{time}</Text>
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  render() {
+    const { time } = this.state;
+    return (
+      <View style={styles.homeViewContainer}>
+        <View style={styles.welcomeHeaderContainer}>
+          <Text style={styles.welcomeHeader}>{i18n.WELCOME_HEADER}</Text>
+        </View>
+        <View style={styles.mainActionButtonContainer}>
+          {time > 0 ? this.renderRunningTimer() : this.renderStartButton()}
+        </View>
       </View>
-      <View style={styles.mainActionButtonContainer}>
-        <TouchableOpacity
-          style={styles.mainActionButton}
-          onPress={() => console.log('Button Pressed')}>
-          <Text style={styles.mainActionButtonText}>{i18n.START}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   homeViewContainer: {
