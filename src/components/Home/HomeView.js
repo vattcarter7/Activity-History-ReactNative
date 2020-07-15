@@ -48,9 +48,9 @@ class HomeView extends Component {
     }
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
-  };
+  }
 
   componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange);
