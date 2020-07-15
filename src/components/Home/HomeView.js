@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import i18n from '../../i18n/i18n';
 
 const HomeView = () => {
   return (
     <View style={styles.homeViewContainer}>
       <View style={styles.welcomeHeaderContainer}>
-        <Text style={styles.welcomeHeader}>Hello My Friend</Text>
+        <Text style={styles.welcomeHeader}>{i18n.WELCOME_HEADER}</Text>
       </View>
       <View style={styles.mainActionButtonContainer}>
         <TouchableOpacity
           style={styles.mainActionButton}
           onPress={() => console.log('Button Pressed')}>
-          <Text style={styles.mainActionButtonText}>START</Text>
+          <Text style={styles.mainActionButtonText}>{i18n.START}</Text>
         </TouchableOpacity>
       </View>
     </View>
