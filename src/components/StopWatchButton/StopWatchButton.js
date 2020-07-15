@@ -1,0 +1,55 @@
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+
+import i18n from '../../i18n/i18n';
+import moment from 'moment';
+
+const StopWatchButton = ({ time, startOnPressAction, timerOnPressAction }) => {
+  if (time > 0) {
+    return (
+      <TouchableOpacity
+        style={styles.mainActionButton}
+        onPress={timerOnPressAction}>
+        <Text style={styles.mainActionButtonText}>
+          {moment.utc(time).format(i18n.TIME_FORMAT)}
+        </Text>
+        <Text
+          style={[
+            styles.mainActionButtonText,
+            styles.mainActionButtonPausedText,
+          ]}>
+          {i18n.STOP_WATCH.PAUSE}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <TouchableOpacity
+      style={styles.mainActionButton}
+      onPress={startOnPressAction}>
+      <Text style={styles.mainActionButtonText}>{i18n.STOP_WATCH.START}</Text>
+    </TouchableOpacity>
+  );
+};
+
+export default StopWatchButton;
+
+const styles = StyleSheet.create({
+  mainActionButton: {
+    width: 284,
+    height: 284,
+    borderRadius: 142,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00CD5E',
+  },
+  mainActionButtonText: {
+    fontSize: 60,
+    color: '#FFF',
+    fontWeight: 'bold',
+  },
+  mainActionButtonPausedText: {
+    fontSize: 24,
+  },
+});

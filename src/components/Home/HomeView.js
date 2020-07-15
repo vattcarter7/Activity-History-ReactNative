@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import moment from 'moment';
+import { View, Text, StyleSheet } from 'react-native';
 
 import i18n from '../../i18n/i18n';
+import StopWatchButton from '../StopWatchButton/StopWatchButton';
 
 class HomeView extends Component {
   constructor(props) {
@@ -12,50 +12,23 @@ class HomeView extends Component {
     };
   }
 
-  renderStartButton() {
-    return (
-      <TouchableOpacity
-        style={styles.mainActionButton}
-        onPress={() => {
-          setInterval(() => {
-            const { time, paused } = this.state;
-            if (!paused) {
-              this.setState({
-                time: time + 1000,
-              });
-            }
-          }, 1000);
-        }}>
-        <Text style={styles.mainActionButtonText}>{i18n.HOME.START}</Text>
-      </TouchableOpacity>
-    );
-  }
+  startTimer = () => {
+    setInterval(() => {
+      const { time, paused } = this.state;
+      if (!paused) {
+        this.setState({
+          time: time + 1000,
+        });
+      }
+    }, 1000);
+  };
 
-  renderRunningTimer() {
-    const { time } = this.state;
-    return (
-      <TouchableOpacity
-        style={styles.mainActionButton}
-        onPress={() => {
-          console.log('Button Pressed');
-          const { paused } = this.state;
-          this.setState({
-            paused: !paused,
-          });
-        }}>
-        <Text style={styles.mainActionButtonText}>
-          <Text>{moment.utc(time).format('HH:mm:ss')}</Text>
-        </Text>
-        <Text
-          style={[
-            styles.mainActionButtonText,
-            styles.mainActionButtonPausedText,
-          ]}>
-          <Text>{i18n.HOME.PAUSE}</Text>
-        </Text>
-      </TouchableOpacity>
-    );
-  }
+  pauseTimer = () => {
+    const { paused } = this.state;
+    this.setState({
+      paused: !paused,
+    });
+  };
 
   render() {
     const { time } = this.state;
@@ -65,12 +38,18 @@ class HomeView extends Component {
           <Text style={styles.welcomeHeader}>{i18n.HOME.WELCOME_HEADER}</Text>
         </View>
         <View style={styles.mainActionButtonContainer}>
-          {time > 0 ? this.renderRunningTimer() : this.renderStartButton()}
+          <StopWatchButton
+            time={time}
+            startOnPressAction={this.startTimer}
+            timerOnPressAction={this.pauseTimer}
+          />
         </View>
       </View>
     );
   }
 }
+
+export default HomeView;
 
 const styles = StyleSheet.create({
   homeViewContainer: {
@@ -90,22 +69,4 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: '#000',
   },
-  mainActionButton: {
-    width: 284,
-    height: 284,
-    borderRadius: 142,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#00CD5E',
-  },
-  mainActionButtonText: {
-    fontSize: 60,
-    color: '#FFF',
-    fontWeight: 'bold',
-  },
-  mainActionButtonPausedText: {
-    fontSize: 24,
-  },
 });
-
-export default HomeView;
