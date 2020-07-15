@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, AppState } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import i18n from '../../i18n/i18n';
 import StopWatchButton from '../StopWatchButton/StopWatchButton';
@@ -12,8 +13,54 @@ class HomeView extends Component {
     };
   }
 
+  handleAppStateChange = async (nextAppState) => {
+    const now = new Date().getTime();
+    const { time, paused } = this.state;
+    const readTime = await AsyncStorage.getItem('@time');
+    const readStateChangeTimestamp = await AsyncStorage.getItem(
+      '@appStateChangeTimestamp',
+    );
+    const timeDifference = now - parseInt(readStateChangeTimestamp, 10);
+    const newTime = parseInt(readTime, 10) + timeDifference;
+
+    if (nextAppState === 'active') {
+      const isPaused = await AsyncStorage.getItem('@isPaused');
+      const wasPaused = isPaused && isPaused === 'true';
+      let newState = {
+        paused: wasPaused,
+        time: parseInt(readTime, 10),
+      };
+
+      if (!wasPaused) {
+        newState.time = newTime;
+      }
+      this.setState(newState, this.startTimer);
+    } else {
+      await AsyncStorage.setItem(
+        '@isPaused',
+        paused === true ? 'true' : 'false',
+      );
+      await AsyncStorage.setItem('@time', JSON.stringify(time));
+      await AsyncStorage.setItem(
+        '@appStateChangeTimestamp',
+        JSON.stringify(now),
+      );
+    }
+  };
+
+  componentDidMount = () => {
+    AppState.addEventListener('change', this.handleAppStateChange);
+  };
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
   startTimer = () => {
-    setInterval(() => {
+    if (this.timerIntervalId) {
+      clearInterval(this.timerIntervalId);
+    }
+    this.timerIntervalId = setInterval(() => {
       const { time, paused } = this.state;
       if (!paused) {
         this.setState({
