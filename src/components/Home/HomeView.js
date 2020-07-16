@@ -20,12 +20,12 @@ class HomeView extends Component {
   handleAppStateChange = async (nextAppState) => {
     const now = new Date().getTime();
     const { time, paused } = this.state;
-    const readTime = await AsyncStorage.getItem('@time');
-    const readStateChangeTimestamp = await AsyncStorage.getItem(
-      '@appStateChangeTimestamp',
+    const readTime = parseInt(await AsyncStorage.getItem('@time'));
+    const readStateChangeTimestamp = parseInt(
+      await AsyncStorage.getItem('@appStateChangeTimestamp'),
     );
-    const timeDifference = now - parseInt(readStateChangeTimestamp, 10);
-    const newTime = parseInt(readTime, 10) + timeDifference;
+    const timeDifference = now - readStateChangeTimestamp;
+    const newTime = readTime + timeDifference;
 
     if (nextAppState === 'active') {
       const isPaused = await AsyncStorage.getItem('@isPaused');
@@ -82,7 +82,7 @@ class HomeView extends Component {
   };
 
   render() {
-    const { time } = this.state;
+    const { time, paused } = this.state;
     return (
       <View style={styles.homeViewContainer}>
         <View style={styles.welcomeHeaderContainer}>
@@ -90,6 +90,7 @@ class HomeView extends Component {
         </View>
         <View style={styles.mainActionButtonContainer}>
           <StopWatchButton
+            paused={paused}
             time={time}
             startOnPressAction={this.startTimer}
             timerOnPressAction={this.pauseTimer}
