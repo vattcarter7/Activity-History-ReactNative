@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, AppState } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  AppState,
+  TouchableOpacity,
+} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import i18n from '../../i18n/i18n';
@@ -61,9 +67,7 @@ class HomeView extends Component {
   }
 
   startTimer = () => {
-    if (this.timerIntervalId) {
-      clearInterval(this.timerIntervalId);
-    }
+    this.clearTimer();
     this.timerIntervalId = setInterval(() => {
       const { time, paused } = this.state;
       if (!paused) {
@@ -74,11 +78,39 @@ class HomeView extends Component {
     }, 1000);
   };
 
+  clearTimer = () => {
+    if (this.timerIntervalId) {
+      clearInterval(this.timerIntervalId);
+    }
+  };
+
   pauseTimer = () => {
     const { paused } = this.state;
     this.setState({
       paused: !paused,
     });
+  };
+
+  renderFinishButton = () => {
+    const { time, paused } = this.state;
+    if (time && !paused) {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.clearTimer();
+            this.setState({
+              time: 0,
+            });
+            console.log('Navigate to the next page');
+          }}>
+          <Text style={styles.finishButtonText}>
+            {i18n.HOME.FINISH_CAPTION_BTN}
+          </Text>
+        </TouchableOpacity>
+      );
+    }
+
+    return null;
   };
 
   render() {
@@ -95,6 +127,7 @@ class HomeView extends Component {
             startOnPressAction={this.startTimer}
             timerOnPressAction={this.pauseTimer}
           />
+          {this.renderFinishButton()}
         </View>
       </View>
     );
@@ -108,7 +141,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
+  finishButtonText: {
+    fontSize: 60,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    color: '#EA4C4C',
+  },
   mainActionButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
     flex: 2,
   },
   welcomeHeaderContainer: {
