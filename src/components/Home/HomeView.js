@@ -12,13 +12,6 @@ import i18n from '../../i18n/i18n';
 import StopWatchButton from '../StopWatchButton/StopWatchButton';
 
 class HomeView extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     time: 0,
-  //   };
-  // }
-
   state = {
     time: 0,
   };

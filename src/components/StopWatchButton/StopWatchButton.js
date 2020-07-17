@@ -11,7 +11,7 @@ const StopWatchButton = ({
   paused,
 }) => {
   const timerOpacity = new Animated.Value(1);
-  const BLINK_DELAY = 500;
+  const BLINK_DELAY = 800;
   const blinker = (toValue) => {
     if (paused) {
       Animated.timing(timerOpacity, {
